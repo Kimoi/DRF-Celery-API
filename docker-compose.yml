@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: web
+    ports:
+      - 8000:8000
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    restart: always
+
+  db:
+    image: postgres
+    container_name: db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - '5432:5432'
+    environment:
+      - 'POSTGRES_HOST_AUTH_METHOD=trust'
+    restart: always
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - '6379:6379'
+    restart: always
+
+  celery:
+    build:
+      context: .
+    container_name: celery
+    command: celery -A drfCeleryAPI worker --task-events --loglevel=INFO
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+    restart: always
+
+
+volumes:
+  postgres_data:
