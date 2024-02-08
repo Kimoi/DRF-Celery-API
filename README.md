@@ -25,6 +25,8 @@ processing using Celery framework**
 - Environment variables
 - Application is fully Dockerized
 - File type validation
+- ApacheBench
+- Additional question
 
 ## ✨Give it a try:
 
@@ -83,3 +85,20 @@ docker-compose exec web python manage.py createsuperuser
 >>/api/files/
 >
 >GET. List processed files
+
+## 🔥ApacheBench
+
+The server seems to handle the test well, 
+with no failed requests and a reasonable response time for 
+most of them. However, in case of high load, 
+there is a room for optimization. 
+Here is several options that we can implement:
+
+- Caching to store frequently 
+accessed data. This reduces redundant processing and 
+database queries
+- Horizontal Scaling can spread the load across multiple servers
+- Asynchronous Processing to delegate time-consuming tasks 
+to background processes (using Celery for example)
+
+![ab](./ab_c100_n1000.png)
